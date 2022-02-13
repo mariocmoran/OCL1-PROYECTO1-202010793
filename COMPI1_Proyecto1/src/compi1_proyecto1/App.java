@@ -1,4 +1,5 @@
-package proyecto1.compi1;
+
+package compi1_proyecto1;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -10,9 +11,9 @@ import java.io.FileWriter;
 import java.io.*;  
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class Principal 
+public class App
 extends JFrame 
-implements ActionListener, MouseListener{
+implements ActionListener, MouseListener {
     
     JMenuItem menuNuevo, menuAbrir, menuGuardar, menuGuardarComo;
     JButton btnAnalizar, btnGenerarAutomatas;
@@ -20,7 +21,7 @@ implements ActionListener, MouseListener{
     
     String pathFile;
     
-    public Principal() {
+    public App(){
         this.setTitle("ExpAnalyzer");
         this.setLayout(null);
         this.getContentPane().setBackground(new java.awt.Color(148, 219, 224));
@@ -100,7 +101,7 @@ implements ActionListener, MouseListener{
         this.addWindowListener(exitListener);
         this.setVisible(true);
     }
-
+    
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == menuNuevo) {
@@ -111,8 +112,14 @@ implements ActionListener, MouseListener{
             abrir();
         } else if (ae.getSource() == menuGuardarComo) {
             guardar();
+        } else if (ae.getSource() == btnAnalizar) {
+            //generarLexer();
+        } else if (ae.getSource() == btnGenerarAutomatas) {
+            guardar();
         }
     }
+    
+    
     
     public void guardar(){
         // Ventana FileChooser
@@ -162,6 +169,10 @@ implements ActionListener, MouseListener{
         }
     }
     
+    public static void generarLexer(String ruta){
+        
+    }
+    
     @Override
     public void mouseClicked(MouseEvent e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -186,6 +197,4 @@ implements ActionListener, MouseListener{
     public void mouseExited(MouseEvent e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
 }

@@ -1,14 +1,14 @@
-package proyecto1.compi1;
+package compi1_proyecto1;
 
-import java.io.*;
 import javax.swing.UIManager;
 
-public class App {
+public class COMPI1_Proyecto1 {
+
     
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-            Principal ventanaPrincipal = new Principal();
+            App aplicacion = new App();
         } catch(Exception e){
             System.out.println("e = " + e);
         }

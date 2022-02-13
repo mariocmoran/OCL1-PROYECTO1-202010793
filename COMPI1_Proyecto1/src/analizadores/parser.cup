@@ -1,0 +1,48 @@
+package analizadores;
+import java_cup.runtime.*;
+
+parser code 
+{:
+    public void syntax_error(Symbol s) {
+        System.out.println("Error sintáctico: " + s.value);
+    }
+
+    public void unrecover_syntax_error(Symbol s) throws java.lang.Exception {
+        System.out.println("Error sintáctico unrecovered: " + s.value);
+    }
+:}
+
+terminal String PARLEFT, PARRIGHT;
+terminal String ADD, MINUS, TIMES, DIVIDE;
+terminal String NUMBER, DECIMAL;
+terminal String UMINUS;
+
+non terminal ini;
+non terminal instruction;
+non terminal Double expression;
+
+precedence left ADD, MINUS;
+precedence left TIMES, DIVIDE;
+precedence right UMINUS;
+
+start with ini;
+
+ini ::= 
+    instruction:a {: System.out.println("Result: " + a); :}
+    | error
+;
+
+instruction ::= 
+    expression:a {:RESULT = a;:}
+;
+
+expression ::= 
+    MINUS expression:left                           {:RESULT = 0-left;:} %prec UMINUS
+    | expression:left MINUS expression:right        {:RESULT = left-right;:}
+    | expression:left ADD expression:right          {:RESULT = left+right;:}
+    | expression:left TIMES expression:right        {:RESULT = left*right;:}
+    | expression:left DIVIDE expression:right       {:RESULT = left/right;:}
+    | PARLEFT expression:exp PARRIGHT               {:RESULT = exp;:}
+    | NUMBER:num                                    {:RESULT = new Double(num);:}
+    | DECIMAL:num                                   {:RESULT = new Double(num);:}
+;

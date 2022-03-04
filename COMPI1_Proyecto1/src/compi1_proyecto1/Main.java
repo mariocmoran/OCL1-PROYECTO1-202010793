@@ -1,8 +1,9 @@
 package compi1_proyecto1;
 
+import java.io.File;
 import javax.swing.UIManager;
 
-public class COMPI1_Proyecto1 {
+public class Main {
 
     
     public static void main(String[] args) {

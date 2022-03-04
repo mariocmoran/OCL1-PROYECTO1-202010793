@@ -1,6 +1,7 @@
 
 package compi1_proyecto1;
 
+import static analizadores.Generador.generarLexer;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -26,6 +27,7 @@ implements ActionListener, MouseListener {
         this.setLayout(null);
         this.getContentPane().setBackground(new java.awt.Color(148, 219, 224));
         
+        // BARRA DE MENÚ -------------------------------------------------------
         JMenuBar menuBar =new JMenuBar(); 
         JMenu menu =new JMenu("Archivos");
         
@@ -43,7 +45,7 @@ implements ActionListener, MouseListener {
         
         menu.add(menuNuevo); menu.add(menuAbrir); menu.add(menuGuardar); menu.add(menuGuardarComo);
         menuBar.add(menu);
-        this.setJMenuBar(menuBar);
+        this.setJMenuBar(menuBar);  
         
         Font  f1  = new Font(Font.DIALOG, Font.BOLD,  13);
         
@@ -52,10 +54,14 @@ implements ActionListener, MouseListener {
         labelEntrada.setFont(f1);
         this.add(labelEntrada);
         
+        //PANEL DE ENTRADA  ----------------------------------------------------
+        
         //CONTAINER TEXTO ENTRADA
         JPanel panelEntrada = new JPanel();
-        panelEntrada.setBounds(5,30, 500,425); 
-        entrada =new JTextArea(25, 48);
+        panelEntrada.setBounds(6,30, 500,425); 
+        entrada =new JTextArea(25, 37);
+        Font font = new Font("Verdana", Font.BOLD, 12);
+        entrada.setFont(font);
         JScrollPane scrollEntrada = new JScrollPane(entrada, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);        
         panelEntrada.add(scrollEntrada);
         this.add(panelEntrada);
@@ -65,6 +71,7 @@ implements ActionListener, MouseListener {
         labelConsola.setFont(f1);
         this.add(labelConsola);
         
+        //PANEL DE CONSOLA  ----------------------------------------------------
         //CONTAINER TEXTO CONSOLA
         JPanel panelConsola = new JPanel();
         panelConsola.setBounds(5,475,1175,200); 
@@ -73,10 +80,12 @@ implements ActionListener, MouseListener {
         panelConsola.add(scrollConsola);
         this.add(panelConsola);
         
+        //BOTONES Y FUNCIONES  -------------------------------------------------
         //AREA DE FUNCIONES Y REPORTES
         btnAnalizar = new JButton("Analizar Entrada");  
         btnAnalizar.setBounds(525,30,160,30);
         btnAnalizar.setFont(f1);
+        btnAnalizar.addActionListener(this);
         this.add(btnAnalizar);
         
         btnGenerarAutomatas = new JButton("Generar Autómatas");  
@@ -84,7 +93,7 @@ implements ActionListener, MouseListener {
         btnGenerarAutomatas.setFont(f1);
         this.add(btnGenerarAutomatas);
         
-        
+        //FUNCIONES FINALES ----------------------------------------------------
         this.setBounds(200, 40, 1200, 750);
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -113,9 +122,9 @@ implements ActionListener, MouseListener {
         } else if (ae.getSource() == menuGuardarComo) {
             guardar();
         } else if (ae.getSource() == btnAnalizar) {
-            //generarLexer();
+            analizar();
         } else if (ae.getSource() == btnGenerarAutomatas) {
-            guardar();
+            //phgjjk
         }
     }
     
@@ -169,8 +178,25 @@ implements ActionListener, MouseListener {
         }
     }
     
-    public static void generarLexer(String ruta){
+    public void analizar(){
+        //analizadores.Generador.generarLexer();
+        //PRUEBAS **********************************************************
+        String txt = entrada.getText();
+        Instruccion ins = Instruccion.getInstancia();
+        ins.analize(txt);
+        for (int i = 0; i < ins.lista.size(); i++) {
+            consola.append(ins.lista.get(i).getMessage() + "\n");
+        }
+        //PRUEBAS **********************************************************
         
+/*
+<! Comentario Multilinea !>
+//Comentario 2 Prueba
+CONJ: ER1 -> "HoLa";
+//Comentario Prueba
+CONJ: er2 -> "hOlA";
+CONJ: Expresion_Regular3 -> "hola3";
+*/
     }
     
     @Override

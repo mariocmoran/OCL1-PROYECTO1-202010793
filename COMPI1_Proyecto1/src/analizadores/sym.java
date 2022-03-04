@@ -8,29 +8,45 @@ package analizadores;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int MINUS = 5;
-  public static final int DECIMAL = 9;
-  public static final int DIVIDE = 7;
-  public static final int UMINUS = 10;
-  public static final int PARLEFT = 2;
-  public static final int NUMBER = 8;
-  public static final int PARRIGHT = 3;
+  public static final int AND = 2;
+  public static final int GUION = 7;
+  public static final int PUNTOYCOMA = 9;
+  public static final int CADENA = 18;
+  public static final int DOSPUNTOS = 10;
+  public static final int OR = 3;
+  public static final int UNOMAS = 5;
+  public static final int LETRA = 15;
+  public static final int FLECHA = 11;
+  public static final int COMA = 8;
   public static final int EOF = 0;
-  public static final int ADD = 4;
+  public static final int SINO = 6;
+  public static final int CONJ = 12;
   public static final int error = 1;
-  public static final int TIMES = 6;
+  public static final int NUMERO = 13;
+  public static final int IDENTIFICADOR = 17;
+  public static final int CEROMAS = 4;
+  public static final int LETRAS = 14;
+  public static final int UMINUS = 16;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
-  "PARLEFT",
-  "PARRIGHT",
-  "ADD",
-  "MINUS",
-  "TIMES",
-  "DIVIDE",
-  "NUMBER",
-  "DECIMAL",
-  "UMINUS"
+  "AND",
+  "OR",
+  "CEROMAS",
+  "UNOMAS",
+  "SINO",
+  "GUION",
+  "COMA",
+  "PUNTOYCOMA",
+  "DOSPUNTOS",
+  "FLECHA",
+  "CONJ",
+  "NUMERO",
+  "LETRAS",
+  "LETRA",
+  "UMINUS",
+  "IDENTIFICADOR",
+  "CADENA"
   };
 }
 

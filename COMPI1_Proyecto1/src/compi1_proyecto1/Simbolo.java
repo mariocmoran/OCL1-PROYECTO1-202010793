@@ -65,7 +65,7 @@ public class Simbolo {
         String txt = "";
         if (tmp != null) {
             String st = tmp.simbolo.replace("\"","\\\"");
-            txt+="n" + contador + " [label=\"" + st + "\", xlabel=\"" + "\"] \n";
+            txt+="n" + contador + " [label=\"" + st + "\", xlabel=\"" + tmp.anulable + "\"] \n";
             tmp.setId(contador);
             contador++;
             

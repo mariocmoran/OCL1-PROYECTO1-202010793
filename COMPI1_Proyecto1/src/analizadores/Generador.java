@@ -36,6 +36,7 @@ public class Generador {
                     "er2 -> .{letra}*|\"_\"|{letra}{digito};\n" +
                     "//Comentario Prueba\n" +
                     "%%" +
+                    "%%" +
                     "ExpReg5:\"CADENA PRUEBA 2\";\n" +
                     "ExpReg4:\"CADENA PRUEBA\";\n" + 
                     "ExpReg4:\"CADENA PRUEBA 3\";\n" + 

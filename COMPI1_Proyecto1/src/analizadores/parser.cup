@@ -59,8 +59,8 @@ non terminal sentencia;
 
 start with ini; 
 
-ini ::= ER_A instructions:a SEPARADOR sentencias:b ER_C {: 
-    
+ini ::= ER_A instructions:a SEPARADOR SEPARADOR sentencias:b ER_C {: 
+    /**
     a.forEach((t) -> {
         System.out.println(t);
     });
@@ -69,7 +69,7 @@ ini ::= ER_A instructions:a SEPARADOR sentencias:b ER_C {:
         System.out.println(t);
     });
     System.out.println("");
-    System.out.println(TablaSimbolos.EscribirArchivo());
+    System.out.println(TablaSimbolos.EscribirArchivo());**/
  :}
 ;
 

@@ -229,17 +229,12 @@ ExpReg4:"CADENA PRUEBA 3";
     
     public void metodoArbol() {
         try {
-            System.out.println();
             arbol = new Arbol();
             consola.append("Generando Método del arbol...\n");
             TablaSimbolos.getTablaSimbolos().forEach((s) -> {
                 if (s.arbolExpresiones != null){
-                    System.out.println("");
-                    s.preorder(s.arbolExpresiones);
-
+                    //s.preorder(s.arbolExpresiones);
                     generarArbol(s);
-                    //FUNC
-                    System.out.println("");
                 }
             });
         }catch(Exception e){
@@ -259,9 +254,9 @@ ExpReg4:"CADENA PRUEBA 3";
             entrada="digraph G {\n" +
                     "  { \n" +
                     "    node [margin=0 fontcolor=black fontsize=12 width=0.5 shape=circle rotate=45]\n" + 
-                    "r [label=\".\"]\n";
+                    "r [label=\".\", xlabel=\"N\"]\n";
             entrada+= s.obtenerNodos(s.arbolExpresiones);
-            entrada+="a [label=\"#\"]\n" + 
+            entrada+="a [label=\"#\", xlabel=\"N\"]\n" + 
                     "}\n" + 
                     "r -> n0 [arrowhead=none]\n" +
                     "r -> a [arrowhead=none]\n";

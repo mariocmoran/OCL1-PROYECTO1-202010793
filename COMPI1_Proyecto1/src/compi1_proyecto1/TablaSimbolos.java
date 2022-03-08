@@ -3,11 +3,11 @@ package compi1_proyecto1;
 import java.util.ArrayList;
 
 public class TablaSimbolos {
-    private static ArrayList<Simbolo> tablaSimbolos = new ArrayList<Simbolo>(); 
+    public static ArrayList<Simbolo> tablaSimbolos = new ArrayList<Simbolo>(); 
     public static ArrayList<Simbolo> listaTemporal = new ArrayList<>();
     
-    private static boolean error;
-    private static String errores = "";
+    public static boolean error;
+    public static String errores = "";
     public static boolean inicioTransaccion;
     
     public static String obtenerValorVariable(String identificador, String tipoDeclaracion){
@@ -79,4 +79,15 @@ public class TablaSimbolos {
         }
         return texto;   
     }
+
+    public static void limpiar() {
+        TablaSimbolos.tablaSimbolos = new ArrayList<Simbolo>(); 
+        TablaSimbolos.listaTemporal = new ArrayList<>();
+
+        TablaSimbolos.error = false;
+        TablaSimbolos.errores = "";
+        TablaSimbolos.inicioTransaccion = false;
+    }
+    
+    
 }

@@ -94,6 +94,14 @@ sentencia ::= IDENTIFICADOR:id DOSPUNTOS CADENA:c PUNTOYCOMA {:
                     nuevo.setTipoDeclaracion("Sentencia");
                     TablaSimbolos.add(nuevo);
                 :}
+            | IDENTIFICADOR:id DOSPUNTOS CARACTER:c PUNTOYCOMA {:
+                    RESULT = Tokens.SENTENCIA;
+                    Simbolo nuevo = new Simbolo();
+                    nuevo.setNombre(id.toString());
+                    nuevo.setValor(c.toString());
+                    nuevo.setTipoDeclaracion("Sentencia");
+                    TablaSimbolos.add(nuevo);
+                :}
 ;
 
 /* AREA DE EXPRESIONES REGULARES ------------------------------------------------------------------------------------- */
@@ -126,9 +134,10 @@ expresion ::= AND:o expresion:e1 expresion:e2 {:
                     else
                         RESULT = new Expresion(o, e1, "N");
                 :} 
-            | SINO:o expresion:e1 {:RESULT = new Expresion(o, e1, "A");:} //HECHO
-            | ER_A IDENTIFICADOR:id ER_C {:RESULT = new Expresion(id, "N");:} //HECHO
-            | CARACTER:c {:RESULT = new Expresion(c, "N");:} //HECHO
+            | SINO:o expresion:e1 {:RESULT = new Expresion(o, e1, "A");:}
+            | ER_A IDENTIFICADOR:id ER_C {:RESULT = new Expresion(id, "N");:}
+            | CARACTER:c {:RESULT = new Expresion(c, "N");:}
+            | CADENA:c {:RESULT = new Expresion(c, "N");:}
 ;
 
 /* AREA DE CONJUNTOS ------------------------------------------------------------------------------------------------- */

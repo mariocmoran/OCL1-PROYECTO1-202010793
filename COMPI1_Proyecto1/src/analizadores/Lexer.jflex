@@ -29,8 +29,9 @@ CADENA = [\"][^\"]*[\"]
 
 LineTerminator = \r|\n|\r\n
 InputCharacter = [^\r\n]
-MultiLineaComentario = "<!"[^!]*"!>"
+MultiLineaComentario = "<!"[^!>]*"!>"
 LineaComentario = "//"{InputCharacter}*{LineTerminator}?
+
 
 SIMBOLO = "!"|"\""|"#"|"$"|"%"|"&"|"/"|"("|")"|"'"|"*"|"-"|"+"|","|"."|";"|":"|"<"|">"|"="|"?"|"@"|"["|"]"|"\\"|"^"|"_"|"´"|"{"|"}"|"|"
 

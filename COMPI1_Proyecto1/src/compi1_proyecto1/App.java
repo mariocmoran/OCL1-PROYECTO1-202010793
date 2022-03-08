@@ -184,6 +184,7 @@ implements ActionListener, MouseListener {
         //analizadores.Generador.generarLexer();
         //PRUEBAS **********************************************************
         try{
+            TablaSimbolos.limpiar();
             String txt = entrada.getText();
             Instruccion ins = Instruccion.getInstancia();
             ins.analize(txt);
@@ -235,6 +236,7 @@ ExpReg4:"CADENA PRUEBA 3";
                 if (s.arbolExpresiones != null){
                     //s.preorder(s.arbolExpresiones);
                     generarArbol(s);
+                    s.contador = 0;
                 }
             });
         }catch(Exception e){
@@ -246,7 +248,7 @@ ExpReg4:"CADENA PRUEBA 3";
     public void generarArbol(Simbolo s){
         int contador = 0;
         try{
-            File fichero = new File ("C:\\Users\\oncec\\OneDrive\\Desktop\\graph_"+ contadorArboles +".txt");
+            File fichero = new File ("C:\\Users\\oncec\\OneDrive\\Desktop\\" + s.getNombre() + "_" + contadorArboles +".txt");
             FileWriter wr = new FileWriter(fichero, false);
             BufferedWriter w = new BufferedWriter(wr);
 
@@ -267,21 +269,21 @@ ExpReg4:"CADENA PRUEBA 3";
             w.flush();
             w.close();
             
-            generateGraph();
+            generateGraph(s);
         }catch(Exception e){
             e.printStackTrace();
         }
     }
     
-    public static void generateGraph(){
+    public static void generateGraph(Simbolo s){
         try{
             String dotPath = "C:\\Program Files\\Graphviz\\bin\\dot.exe";
 
             String tParam = "-Tjpg";
             String tOParam = "-o";
 
-            String fileInputPath = "C:\\Users\\oncec\\OneDrive\\Desktop\\graph_"+ contadorArboles +".txt";
-            String fileOutputPath = "C:\\Users\\oncec\\OneDrive\\Desktop\\graph_image_"+ contadorArboles +".jpg";
+            String fileInputPath = "C:\\Users\\oncec\\OneDrive\\Desktop\\" + s.getNombre() + "_" + contadorArboles +".txt";
+            String fileOutputPath = "C:\\Users\\oncec\\OneDrive\\Desktop\\" + s.getNombre() +"_image_"+ contadorArboles +".jpg";
             
             contadorArboles++;
 

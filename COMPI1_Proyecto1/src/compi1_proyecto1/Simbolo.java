@@ -60,7 +60,7 @@ public class Simbolo {
         
     }
     
-    int contador = 0;
+    public int contador = 0;
     public String obtenerNodos(Expresion tmp) {
         String txt = "";
         if (tmp != null) {

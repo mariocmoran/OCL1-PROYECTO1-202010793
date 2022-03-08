@@ -10,14 +10,16 @@ parser code
 
     public void syntax_error(Symbol s){ 
         System.out.println("Unexpected token: " +s.value); 
-	Instruccion.lista.addError(new Error_("Sintactico error: "+s.value, "Sintactico"));
+	Instruccion.lista.addError(new Error_("Sintactical error: "+s.value, "Sintactico", s.right, s.left));
     }
 
     /*Method that is called when parser can't be recovered*/
 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
-	Instruccion.lista.addError(new Error_("Sintactico error: "+s.value, "Sintactico"));
-    } 
+	Instruccion.lista.addError(new Error_("Sintactical error: "+s.value, "Sintactico", s.right, s.left));
+    }
+    
+    
 :}
 
 terminal String AND;
@@ -27,61 +29,140 @@ terminal String UNOMAS;
 terminal String SINO;
 terminal String GUION;
 terminal String COMA;
+terminal String ER_A;
+terminal String ER_C;
 
 terminal String PUNTOYCOMA;
 terminal String DOSPUNTOS;
 terminal String FLECHA;
 terminal String CONJ;
+terminal String SEPARADOR;
 
 terminal String NUMERO;
 terminal String LETRAS;
 terminal String LETRA;
+terminal String SIMBOLO;
+terminal String CARACTER;
 
-terminal String UMINUS;
+//terminal String UMINUS;
 terminal String IDENTIFICADOR;
 terminal String CADENA;
 
 non terminal ini;
-non terminal ArrayList<String> instructions;
-non terminal instruction, conjunto, defconjunto, listanumeros, otronumero;
-non terminal Double expression;
+non terminal ArrayList<String> instructions, sentencias;
+non terminal instruction, conjuntos, expresiones;
+non terminal conjunto, listanumeros, otronumero, listaletras, otraletra;
+non terminal Expresion expresion;
+non terminal sentencia;
 
-precedence right UMINUS;
+//precedence right UMINUS;
 
 start with ini; 
 
-ini ::= instructions:a {: 
+ini ::= ER_A instructions:a SEPARADOR sentencias:b ER_C {: 
+    
     a.forEach((t) -> {
         System.out.println(t);
     });
+
+    b.forEach((t) -> {
+        System.out.println(t);
+    });
+    System.out.println("");
+    System.out.println(TablaSimbolos.EscribirArchivo());
  :}
 ;
 
 instructions::= instructions:list instruction:val {:RESULT = list;RESULT.add( new String(val.toString()));:}
-		|instruction:val{:RESULT = new ArrayList<String>();RESULT.add( new String(val.toString()));:};
-
-instruction ::= CONJ DOSPUNTOS IDENTIFICADOR FLECHA conjunto:c PUNTOYCOMA {:RESULT = c;:}
-	| error PUNTOYCOMA
+		|instruction:val{:RESULT = new ArrayList<String>();RESULT.add( new String(val.toString()));:}
 ;
 
-conjunto ::= NUMERO GUION NUMERO {:RESULT = Tokens.CONJUNTONUMEROS;:}
-            | defconjunto GUION defconjunto {:RESULT = Tokens.CONJUNTOLETRAS;:}
-            | listanumeros {:RESULT = Tokens.LISTANUMEROS;:}
+instruction ::= conjuntos:con {:RESULT = Tokens.CONJ;:}
+            | expresiones:exp {:RESULT = Tokens.ER;:}
 ;
 
-defconjunto ::= LETRA
+/* SENTENCIAS ------------------------------------------------------------------------------------------------------- */
+sentencias ::= sentencias:list sentencia:val {:RESULT = list;RESULT.add( new String(val.toString()));:}
+            |sentencia:val{:RESULT = new ArrayList<String>();RESULT.add( new String(val.toString()));:}
 ;
 
-listanumeros ::= NUMERO otronumero
+sentencia ::= IDENTIFICADOR:id DOSPUNTOS CADENA:c PUNTOYCOMA {:
+                    RESULT = Tokens.SENTENCIA;
+                    Simbolo nuevo = new Simbolo();
+                    nuevo.setNombre(id.toString());
+                    nuevo.setValor(c.toString());
+                    nuevo.setTipoDeclaracion("Sentencia");
+                    TablaSimbolos.add(nuevo);
+                :}
 ;
 
-otronumero ::= COMA NUMERO otronumero
-            | {:RESULT = Tokens.LISTANUMEROS;:} 
+/* AREA DE EXPRESIONES REGULARES ------------------------------------------------------------------------------------- */
+expresiones ::= IDENTIFICADOR:id FLECHA expresion:r PUNTOYCOMA {:
+                    RESULT = r;
+                    Simbolo nuevo = new Simbolo();
+                    nuevo.setNombre(id.toString());
+                    nuevo.arbolExpresiones = r;
+                    nuevo.setTipoDeclaracion("Expresion_Regular");
+                    TablaSimbolos.add(nuevo);
+                :}
 ;
 
-//otronumero ::= COMA NUMERO otronumero
-//            | null
-//;
+expresion ::= AND:o expresion:e1 expresion:e2 {:
+                    if (e1.anulable == "A" && e2.anulable == "A")
+                        RESULT = new Expresion(o, e1, e2, "A");
+                    else
+                        RESULT = new Expresion(o, e1, e2, "N");
+                :} 
+            | OR:o expresion:e1 expresion:e2 {:
+                    if (e1.anulable == "A" || e2.anulable == "A")
+                        RESULT = new Expresion(o, e1, e2, "A");
+                    else
+                        RESULT = new Expresion(o, e1, e2, "N");
+                :} 
+            | CEROMAS:o expresion:e1 {:RESULT = new Expresion(o, e1, "A");:} 
+            | UNOMAS:o expresion:e1 {:
+                    if (e1.anulable == "A")
+                        RESULT = new Expresion(o, e1, "A");
+                    else
+                        RESULT = new Expresion(o, e1, "N");
+                :} 
+            | SINO:o expresion:e1 {:RESULT = new Expresion(o, e1, "A");:} //HECHO
+            | ER_A IDENTIFICADOR:id ER_C {:RESULT = new Expresion(id, "N");:} //HECHO
+            | CARACTER:c {:RESULT = new Expresion(c, "N");:} //HECHO
+;
+
+/* AREA DE CONJUNTOS ------------------------------------------------------------------------------------------------- */
+conjuntos ::= CONJ DOSPUNTOS IDENTIFICADOR:id FLECHA conjunto:c PUNTOYCOMA {:
+                Simbolo nuevo = new Simbolo();
+                nuevo.setNombre(id.toString());
+                nuevo.setValor(c.toString());
+                nuevo.setTipoDeclaracion("Conjunto");
+                TablaSimbolos.add(nuevo);
+                RESULT = c;
+            :}
+;
+
+conjunto ::= NUMERO:a GUION:b NUMERO:c {:RESULT = a+b+c;:}
+            | LETRA:a GUION:b LETRA:c {:RESULT = a+b+c;:}
+            | listanumeros:l {:RESULT = l;:}
+            | SIMBOLO:a GUION:b SIMBOLO:c {:RESULT = a+b+c;:}
+            | listaletras:ls {:RESULT = ls;:}
+;
+
+listanumeros ::= NUMERO:n otronumero:on {:RESULT = n+on;:}
+;
+
+otronumero ::= COMA:cm NUMERO:n otronumero:on {:RESULT = cm+n+on;:}
+            | {:RESULT = "";:}
+;
+
+listaletras ::= LETRA:l otraletra:ol {:RESULT = l+ol;:}
+;
+
+otraletra ::= COMA:c LETRA:l otraletra:ol {:RESULT = c+l+ol;:}
+            | {:RESULT = "";:}
+;
+
 
         
   

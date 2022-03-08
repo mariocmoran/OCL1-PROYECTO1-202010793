@@ -21,6 +21,9 @@ implements ActionListener, MouseListener {
     JTextArea entrada, consola;
     
     String pathFile;
+    Arbol arbol;
+    
+    static int contadorArboles = 1;
     
     public App(){
         this.setTitle("ExpAnalyzer");
@@ -91,6 +94,7 @@ implements ActionListener, MouseListener {
         btnGenerarAutomatas = new JButton("Generar Autómatas");  
         btnGenerarAutomatas.setBounds(525,65,160,30);
         btnGenerarAutomatas.setFont(f1);
+        btnGenerarAutomatas.addActionListener(this);
         this.add(btnGenerarAutomatas);
         
         //FUNCIONES FINALES ----------------------------------------------------
@@ -124,11 +128,9 @@ implements ActionListener, MouseListener {
         } else if (ae.getSource() == btnAnalizar) {
             analizar();
         } else if (ae.getSource() == btnGenerarAutomatas) {
-            //phgjjk
+            metodoArbol();
         }
     }
-    
-    
     
     public void guardar(){
         // Ventana FileChooser
@@ -181,22 +183,126 @@ implements ActionListener, MouseListener {
     public void analizar(){
         //analizadores.Generador.generarLexer();
         //PRUEBAS **********************************************************
-        String txt = entrada.getText();
-        Instruccion ins = Instruccion.getInstancia();
-        ins.analize(txt);
-        for (int i = 0; i < ins.lista.size(); i++) {
-            consola.append(ins.lista.get(i).getMessage() + "\n");
+        try{
+            String txt = entrada.getText();
+            Instruccion ins = Instruccion.getInstancia();
+            ins.analize(txt);
+            for (int i = 0; i < ins.lista.size(); i++) {
+                consola.append(ins.lista.get(i).getMessage() + "\n");
+            }
+            consola.append("Se analizó correctamente.\n");
+        }catch(Exception e){
+            consola.append("Error: " + e + "\n");
+            e.printStackTrace();
         }
+
         //PRUEBAS **********************************************************
         
 /*
+
+
+{
 <! Comentario Multilinea !>
 //Comentario 2 Prueba
-CONJ: ER1 -> "HoLa";
+CONJ: nums1 -> 0~4;
 //Comentario Prueba
-CONJ: er2 -> "hOlA";
-CONJ: Expresion_Regular3 -> "hola3";
+CONJ: ltrs1 -> b~d;
+CONJ: lista1 -> 3,1,4,5;
+CONJ: lista2 -> a,b,c,d,g;
+CONJ: simbs1 -> !~$;
+ExpReg1 -> .{digito}."."+{digito};
+ExpReg3 -> . {digito} + | "_" | {letra} {digito};
+ExpReg4 -> *{ltrs1};
+ExpReg5 -> ?{lista2};
+er2 -> .{letra}*|"_"|{letra}{digito};
+//Comentario Prueba
+%%
+ExpReg5:"CADENA PRUEBA 2";
+ExpReg4: "CADENA PRUEBA";
+ExpReg4:"CADENA PRUEBA 3";
+//Comentario Prueba
+}
+
+
 */
+    }
+    
+    public void metodoArbol() {
+        try {
+            System.out.println();
+            arbol = new Arbol();
+            consola.append("Generando Método del arbol...\n");
+            TablaSimbolos.getTablaSimbolos().forEach((s) -> {
+                if (s.arbolExpresiones != null){
+                    System.out.println("");
+                    s.preorder(s.arbolExpresiones);
+
+                    generarArbol(s);
+                    //FUNC
+                    System.out.println("");
+                }
+            });
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+    }
+    
+    public void generarArbol(Simbolo s){
+        int contador = 0;
+        try{
+            File fichero = new File ("C:\\Users\\oncec\\OneDrive\\Desktop\\graph_"+ contadorArboles +".txt");
+            FileWriter wr = new FileWriter(fichero, false);
+            BufferedWriter w = new BufferedWriter(wr);
+
+            String entrada;
+            entrada="digraph G {\n" +
+                    "  { \n" +
+                    "    node [margin=0 fontcolor=black fontsize=12 width=0.5 shape=circle rotate=45]\n" + 
+                    "r [label=\".\"]\n";
+            entrada+= s.obtenerNodos(s.arbolExpresiones);
+            entrada+="a [label=\"#\"]\n" + 
+                    "}\n" + 
+                    "r -> n0 [arrowhead=none]\n" +
+                    "r -> a [arrowhead=none]\n";
+            entrada+= s.obtenerEnlaces(s.arbolExpresiones);
+            entrada+= "}";
+            //Se escribe la informacion en el archivo
+            w.write(entrada);
+            w.flush();
+            w.close();
+            
+            generateGraph();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
+    public static void generateGraph(){
+        try{
+            String dotPath = "C:\\Program Files\\Graphviz\\bin\\dot.exe";
+
+            String tParam = "-Tjpg";
+            String tOParam = "-o";
+
+            String fileInputPath = "C:\\Users\\oncec\\OneDrive\\Desktop\\graph_"+ contadorArboles +".txt";
+            String fileOutputPath = "C:\\Users\\oncec\\OneDrive\\Desktop\\graph_image_"+ contadorArboles +".jpg";
+            
+            contadorArboles++;
+
+            String[] cmd = new String[5];
+            cmd[0] = dotPath;
+            cmd[1] = tParam;
+            cmd[2] = fileInputPath;
+            cmd[3] = tOParam;
+            cmd[4] = fileOutputPath;
+
+            Runtime rt = Runtime.getRuntime();
+
+            rt.exec(cmd);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
     
     @Override

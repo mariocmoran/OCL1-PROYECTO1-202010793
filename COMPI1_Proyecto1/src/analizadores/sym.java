@@ -10,23 +10,27 @@ public class sym {
   /* terminals */
   public static final int AND = 2;
   public static final int GUION = 7;
-  public static final int PUNTOYCOMA = 9;
-  public static final int CADENA = 18;
-  public static final int DOSPUNTOS = 10;
+  public static final int PUNTOYCOMA = 11;
+  public static final int CADENA = 22;
+  public static final int DOSPUNTOS = 12;
   public static final int OR = 3;
   public static final int UNOMAS = 5;
-  public static final int LETRA = 15;
-  public static final int FLECHA = 11;
+  public static final int LETRA = 18;
+  public static final int FLECHA = 13;
+  public static final int CARACTER = 20;
+  public static final int SEPARADOR = 15;
   public static final int COMA = 8;
+  public static final int ER_C = 10;
   public static final int EOF = 0;
+  public static final int ER_A = 9;
   public static final int SINO = 6;
-  public static final int CONJ = 12;
+  public static final int SIMBOLO = 19;
+  public static final int CONJ = 14;
   public static final int error = 1;
-  public static final int NUMERO = 13;
-  public static final int IDENTIFICADOR = 17;
+  public static final int NUMERO = 16;
+  public static final int IDENTIFICADOR = 21;
   public static final int CEROMAS = 4;
-  public static final int LETRAS = 14;
-  public static final int UMINUS = 16;
+  public static final int LETRAS = 17;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -37,14 +41,18 @@ public class sym {
   "SINO",
   "GUION",
   "COMA",
+  "ER_A",
+  "ER_C",
   "PUNTOYCOMA",
   "DOSPUNTOS",
   "FLECHA",
   "CONJ",
+  "SEPARADOR",
   "NUMERO",
   "LETRAS",
   "LETRA",
-  "UMINUS",
+  "SIMBOLO",
+  "CARACTER",
   "IDENTIFICADOR",
   "CADENA"
   };

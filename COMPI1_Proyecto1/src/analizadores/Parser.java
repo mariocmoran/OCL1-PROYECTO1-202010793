@@ -396,9 +396,11 @@ class CUP$Parser$actions {
                     RESULT = r;
                     Simbolo nuevo = new Simbolo();
                     nuevo.setNombre(id.toString());
-                    nuevo.arbolExpresiones = r;
+                    nuevo.guardarArbol(r, contadorHojas);
+                    nuevo.hojas = hojas;
                     nuevo.setTipoDeclaracion("Expresion_Regular");
                     TablaSimbolos.add(nuevo);
+                    contadorHojas = 0;
                 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expresiones",5, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }

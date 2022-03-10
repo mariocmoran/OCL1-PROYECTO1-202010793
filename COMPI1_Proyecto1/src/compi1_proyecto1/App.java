@@ -229,7 +229,7 @@ implements ActionListener, MouseListener {
             TablaSimbolos.getTablaSimbolos().forEach((s) -> {
                 if (s.arbolExpresiones != null){
                     //s.preorderSiguientes(s.arbolExpresiones);
-                    //tablaSiguientes(s);
+                    tablaSiguientes(s);
                     generarArbol(s);
                     s.contador = 0;
                 }
@@ -242,8 +242,10 @@ implements ActionListener, MouseListener {
     
     public void tablaSiguientes(Simbolo s) {
         try {
-//            TablaSiguientes tablaSig = new TablaSiguientes();
-//            tablaSig.getExp(s);
+            TablaSiguientes tablaSig = new TablaSiguientes();
+            tablaSig.listaHojas = s.hojas;
+            tablaSig.llenarTabla();
+            tablaSig.tablaToString();
 //            tablaSig.llenarTabla();
         }catch(Exception e){
             e.printStackTrace();
@@ -269,12 +271,8 @@ implements ActionListener, MouseListener {
             }else{
                 p = s.arbolExpresiones.primeros;
             }
-            entrada+= "r [label=\".\", xlabel=\"N "+ "\n P: " + p + "\"]\n";
             entrada+= s.obtenerNodos(s.arbolExpresiones);
-            entrada+="a [label=\"#\", xlabel=\"N\"]\n" + 
-                    "}\n" + 
-                    "r -> n0 [arrowhead=none]\n" +
-                    "r -> a [arrowhead=none]\n";
+            entrada+= "}";
             entrada+= s.obtenerEnlaces(s.arbolExpresiones);
             entrada+= "}";
             //Se escribe la informacion en el archivo
@@ -288,7 +286,7 @@ implements ActionListener, MouseListener {
         }
     }
     
-    public static void generateGraph(Simbolo s){
+    public void generateGraph(Simbolo s){
         try{
             String dotPath = "C:\\Program Files\\Graphviz\\bin\\dot.exe";
 
@@ -310,7 +308,7 @@ implements ActionListener, MouseListener {
             Runtime rt = Runtime.getRuntime();
 
             rt.exec(cmd);
-            System.out.println("Se generó correctamente.");
+            consola.append("El árbol se generó correctamente.\n");
         }catch(Exception e){
             e.printStackTrace();
         }

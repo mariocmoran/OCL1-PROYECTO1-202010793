@@ -8,7 +8,7 @@ public class Simbolo {
     private String tipoDeclaracion; // TIPO: CONJUNTO, EXPRESION REGULAR, SENTENCIA
     public String[] listaString;
     public Expresion arbolExpresiones;
-    //public ArrayList<Expresion> hojas = new ArrayList<>();
+    public ArrayList<Expresion> hojas = new ArrayList<>();
     
     public boolean yaExiste;
 
@@ -66,7 +66,12 @@ public class Simbolo {
         String txt = "";
         if (tmp != null) {
             String st = tmp.simbolo.replace("\"","\\\"");
-            txt+="n" + contador + " [label=\"" + st + "\", xlabel=\"" + tmp.anulable +"\n P: " + tmp.primeros +"\n U: " + tmp.ultimos + "\"] \n";
+            if (tmp.simbolo == "#"){
+                txt+="a [label=\"" + st + "\", xlabel=\"" + tmp.anulable +"&#92;n P: " + tmp.primeros +"&#92;n U: " + tmp.ultimos + "\"] \n";
+            }else{
+                txt+="n" + contador + " [label=\"" + st + "\", xlabel=\"" + tmp.anulable +"&#92;n P: " + tmp.primeros +"&#92;n U: " + tmp.ultimos + "\"] \n";
+            }
+            
             tmp.setId(contador);
             contador++;
             
@@ -83,7 +88,12 @@ public class Simbolo {
             if (tmp.expresion1 != null)
                 txt+="n" + tmp.getId() + " -> n" + tmp.expresion1.getId() + " [arrowhead=none]\n";
             if (tmp.expresion2 != null)
-                txt+="n" + tmp.getId() + " -> n" + tmp.expresion2.getId() + " [arrowhead=none]\n";
+                if (tmp.expresion2.simbolo == "#"){
+                    txt+="n" + tmp.getId() + " -> a [arrowhead=none]\n";
+                }else{
+                    txt+="n" + tmp.getId() + " -> n" + tmp.expresion2.getId() + " [arrowhead=none]\n";
+                }
+                
             txt+=obtenerEnlaces(tmp.expresion1);
             txt+=obtenerEnlaces(tmp.expresion2);
         }
@@ -132,6 +142,21 @@ public class Simbolo {
         }
         return false;
     }
+    
+    public void guardarArbol(Expresion abb, int contadorHojas){
+        String primeros = "";
+        int num = contadorHojas+1;
+        if (abb.anulable == "A") {
+            primeros = abb.primeros + "," +num;
+        }else{
+            primeros = abb.primeros;
+        }
+        Expresion aceptacion = new Expresion("#", "N", num, num+"", num+"");
+        Expresion raiz = new Expresion(".", abb, aceptacion, "N", primeros, num+"");
+        this.arbolExpresiones = raiz;
+    }
+    
+    
   
     
 }

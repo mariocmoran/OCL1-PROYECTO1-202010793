@@ -113,9 +113,11 @@ expresiones ::= IDENTIFICADOR:id FLECHA expresion:r PUNTOYCOMA {:
                     RESULT = r;
                     Simbolo nuevo = new Simbolo();
                     nuevo.setNombre(id.toString());
-                    nuevo.arbolExpresiones = r;
+                    nuevo.guardarArbol(r, contadorHojas);
+                    nuevo.hojas = hojas;
                     nuevo.setTipoDeclaracion("Expresion_Regular");
                     TablaSimbolos.add(nuevo);
+                    contadorHojas = 0;
                 :}
 ;
 

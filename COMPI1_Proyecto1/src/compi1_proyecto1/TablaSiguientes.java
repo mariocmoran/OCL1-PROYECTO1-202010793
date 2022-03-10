@@ -10,7 +10,7 @@ public class TablaSiguientes {
     
     public void llenarTabla(){
         for (int i = 0; i < listaHojas.size(); i++) {
-            ElementoSiguiente novo = new ElementoSiguiente(listaHojas.get(i).simbolo,listaHojas.get(i).id+"");
+            ElementoSiguiente novo = new ElementoSiguiente(listaHojas.get(i).simbolo, listaHojas.get(i).numeroHoja+"");
             listaSiguientes.add(novo);
         }
     }
@@ -18,6 +18,12 @@ public class TablaSiguientes {
     public void getExp(Simbolo s){
         this.listaHojas = s.obtenerHojas();
         this.listaSimbolos = s.obtenerSimbolos();
+    }
+    
+    public void tablaToString(){
+        for (int i = 0; i < listaSiguientes.size(); i++) {
+            System.out.println(listaSiguientes.get(i).hoja + " " + listaSiguientes.get(i).getValor());
+        }
     }
     
     

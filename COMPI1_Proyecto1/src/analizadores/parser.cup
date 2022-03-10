@@ -7,7 +7,10 @@ import compi1_proyecto1.*;
 parser code 
 {:
     /*Method that is called when parser can be recovered*/
-
+    public static int contadorHojas = 0;
+    String p = "";
+    String u = "";
+    ArrayList<Expresion> hojas = new ArrayList<>();
     public void syntax_error(Symbol s){ 
         System.out.println("Unexpected token: " +s.value); 
 	Instruccion.lista.addError(new Error_("Sintactical error: "+s.value, "Sintactico", s.right, s.left));
@@ -17,6 +20,7 @@ parser code
 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
 	Instruccion.lista.addError(new Error_("Sintactical error: "+s.value, "Sintactico", s.right, s.left));
+        
     }
     
     
@@ -59,8 +63,8 @@ non terminal sentencia;
 
 start with ini; 
 
-ini ::= ER_A instructions:a SEPARADOR SEPARADOR sentencias:b ER_C {: 
-    /**
+ini ::= ER_A instructions:a SEPARADOR SEPARADOR sentencias:b ER_C {:
+    
     a.forEach((t) -> {
         System.out.println(t);
     });
@@ -69,7 +73,7 @@ ini ::= ER_A instructions:a SEPARADOR SEPARADOR sentencias:b ER_C {:
         System.out.println(t);
     });
     System.out.println("");
-    System.out.println(TablaSimbolos.EscribirArchivo());**/
+    System.out.println(TablaSimbolos.EscribirArchivo());
  :}
 ;
 
@@ -116,28 +120,70 @@ expresiones ::= IDENTIFICADOR:id FLECHA expresion:r PUNTOYCOMA {:
 ;
 
 expresion ::= AND:o expresion:e1 expresion:e2 {:
-                    if (e1.anulable == "A" && e2.anulable == "A")
-                        RESULT = new Expresion(o, e1, e2, "A");
-                    else
-                        RESULT = new Expresion(o, e1, e2, "N");
+                    if (e1.anulable == "A" && e2.anulable == "A"){
+                        p = "";
+                        u = "";
+                        p = e1.primeros + "," + e2.primeros;
+                        u = e1.ultimos + "," + e2.ultimos; 
+                        RESULT = new Expresion(o, e1, e2, "A", p, u);
+                    }else{
+                        p = "";
+                        u = "";
+                        if (e1.anulable == "A"){
+                            p = e1.primeros + "," + e2.primeros;
+                        }else{
+                            p = e1.primeros;
+                        }
+                        if (e2.anulable == "A"){
+                            u = e1.ultimos + "," + e2.ultimos;
+                        }else{
+                            u = e2.ultimos;
+                        }
+                        RESULT = new Expresion(o, e1, e2, "N", p, u);
+                    }
                 :} 
             | OR:o expresion:e1 expresion:e2 {:
-                    if (e1.anulable == "A" || e2.anulable == "A")
-                        RESULT = new Expresion(o, e1, e2, "A");
-                    else
-                        RESULT = new Expresion(o, e1, e2, "N");
+                    p = "";
+                    u = "";
+                    if (e1.anulable == "A" || e2.anulable == "A"){
+                        p = e1.primeros + "," + e2.primeros;
+                        u = e1.ultimos + "," + e2.ultimos;
+                        RESULT = new Expresion(o, e1, e2, "A", p, u);
+                    }else{
+                        p = e1.primeros + "," + e2.primeros;
+                        u = e1.ultimos + "," + e2.ultimos;
+                        RESULT = new Expresion(o, e1, e2, "N", p, u);
+                    }
                 :} 
-            | CEROMAS:o expresion:e1 {:RESULT = new Expresion(o, e1, "A");:} 
+            | CEROMAS:o expresion:e1 {:RESULT = new Expresion(o, e1, "A", e1.primeros, e1.ultimos);:} 
             | UNOMAS:o expresion:e1 {:
-                    if (e1.anulable == "A")
-                        RESULT = new Expresion(o, e1, "A");
-                    else
-                        RESULT = new Expresion(o, e1, "N");
+                    if (e1.anulable == "A"){
+                        RESULT = new Expresion(o, e1, "A", e1.primeros, e1.ultimos);
+                    }else{
+                        RESULT = new Expresion(o, e1, "N", e1.primeros, e1.ultimos);
+                    }
                 :} 
-            | SINO:o expresion:e1 {:RESULT = new Expresion(o, e1, "A");:}
-            | ER_A IDENTIFICADOR:id ER_C {:RESULT = new Expresion(id, "N");:}
-            | CARACTER:c {:RESULT = new Expresion(c, "N");:}
-            | CADENA:c {:RESULT = new Expresion(c, "N");:}
+            | SINO:o expresion:e1 {:
+                    RESULT = new Expresion(o, e1, "A", e1.primeros, e1.ultimos);
+                :}
+            | ER_A IDENTIFICADOR:id ER_C {:
+                    contadorHojas++;
+                    Expresion nuevo = new Expresion(id, "N", contadorHojas, contadorHojas+"", contadorHojas+"");
+                    hojas.add(nuevo);
+                    RESULT = nuevo;
+                :}
+            | CARACTER:c {:
+                    contadorHojas++;
+                    Expresion nuevo = new Expresion(c, "N", contadorHojas, contadorHojas+"", contadorHojas+"");
+                    hojas.add(nuevo);
+                    RESULT = nuevo;
+                :}
+            | CADENA:c {:
+                    contadorHojas++;
+                    Expresion nuevo = new Expresion(c, "N", contadorHojas, contadorHojas+"", contadorHojas+"");
+                    hojas.add(nuevo);
+                    RESULT = nuevo;
+                :}
 ;
 
 /* AREA DE CONJUNTOS ------------------------------------------------------------------------------------------------- */

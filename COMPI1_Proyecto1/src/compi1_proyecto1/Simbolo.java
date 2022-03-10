@@ -8,6 +8,7 @@ public class Simbolo {
     private String tipoDeclaracion; // TIPO: CONJUNTO, EXPRESION REGULAR, SENTENCIA
     public String[] listaString;
     public Expresion arbolExpresiones;
+    //public ArrayList<Expresion> hojas = new ArrayList<>();
     
     public boolean yaExiste;
 
@@ -65,7 +66,7 @@ public class Simbolo {
         String txt = "";
         if (tmp != null) {
             String st = tmp.simbolo.replace("\"","\\\"");
-            txt+="n" + contador + " [label=\"" + st + "\", xlabel=\"" + tmp.anulable + "\"] \n";
+            txt+="n" + contador + " [label=\"" + st + "\", xlabel=\"" + tmp.anulable +"\n P: " + tmp.primeros +"\n U: " + tmp.ultimos + "\"] \n";
             tmp.setId(contador);
             contador++;
             
@@ -88,5 +89,49 @@ public class Simbolo {
         }
         return txt;
     }
+    
+    public ArrayList<Expresion> obtenerHojas(){
+        ArrayList<Expresion> nueval = obtener_hojas(arbolExpresiones);
+        return nueval;
+    }
+    
+    public ArrayList<Expresion> obtener_hojas(Expresion tmp){
+        ArrayList<Expresion> nueva = new ArrayList<Expresion>();
+        
+        if (tmp != null) {
+            if (tmp.isHoja){
+                nueva.add(tmp);
+            }
+            obtener_hojas(tmp.expresion1);
+            obtener_hojas(tmp.expresion2);
+        }
+        return nueva;
+    }
+    
+    public ArrayList<Expresion> obtenerSimbolos(){
+        ArrayList<Expresion> nueva = obtener_simbolos(arbolExpresiones);
+        return nueva;
+    }
+    
+    public ArrayList<Expresion> obtener_simbolos(Expresion tmp){
+        ArrayList<Expresion> nueva = new ArrayList<Expresion>();
+        
+        if (tmp != null) {
+            if (isSim(tmp.simbolo)){
+                nueva.add(tmp);
+            }
+            obtener_simbolos(tmp.expresion1);
+            obtener_simbolos(tmp.expresion2);
+        }
+        return nueva;
+    }
+    
+    public boolean isSim(String simbolo){
+        if (simbolo == "*" || simbolo == "." || simbolo == "+"){
+            return true;
+        }
+        return false;
+    }
+  
     
 }

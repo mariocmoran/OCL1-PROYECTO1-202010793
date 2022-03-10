@@ -2,6 +2,7 @@
 package compi1_proyecto1;
 
 import static analizadores.Generador.generarLexer;
+import analizadores.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -181,8 +182,6 @@ implements ActionListener, MouseListener {
     }
     
     public void analizar(){
-        //analizadores.Generador.generarLexer();
-        //PRUEBAS **********************************************************
         try{
             TablaSimbolos.limpiar();
             String txt = entrada.getText();
@@ -196,49 +195,56 @@ implements ActionListener, MouseListener {
             consola.append("Error: " + e + "\n");
             e.printStackTrace();
         }
-
-        //PRUEBAS **********************************************************
         
-/*
-
-
-{
-<! Comentario Multilinea !>
-//Comentario 2 Prueba
-CONJ: nums1 -> 0~4;
-//Comentario Prueba
-CONJ: ltrs1 -> b~d;
-CONJ: lista1 -> 3,1,4,5;
-CONJ: lista2 -> a,b,c,d,g;
-CONJ: simbs1 -> !~$;
-ExpReg1 -> .{digito}."."+{digito};
-ExpReg3 -> . {digito} + | "_" | {letra} {digito};
-ExpReg4 -> *{ltrs1};
-ExpReg5 -> ?{lista2};
-er2 -> .{letra}*|"_"|{letra}{digito};
-//Comentario Prueba
-%%
-ExpReg5:"CADENA PRUEBA 2";
-ExpReg4: "CADENA PRUEBA";
-ExpReg4:"CADENA PRUEBA 3";
-//Comentario Prueba
-}
-
-
-*/
+        /*
+        {
+            <! Comentario Multilinea !>
+            //Comentario 2 Prueba
+            CONJ: nums1 -> 0~4;
+            //Comentario Prueba
+            CONJ: ltrs1 -> b~d;
+            CONJ: lista1 -> 3,1,4,5;
+            CONJ: lista2 -> a,b,c,d,g;
+            CONJ: simbs1 -> !~$;
+            ExpReg1 -> .{digito}."."+{digito};
+            ExpReg3 -> . {digito} + | "_" | {letra} {digito};
+            ExpReg4 -> *{ltrs1};
+            ExpReg5 -> ?{lista2};
+            er2 -> .{letra}*|"_"|{letra}{digito};
+            //Comentario Prueba
+            %%
+            ExpReg5:"CADENA PRUEBA 2";
+            ExpReg4: "CADENA PRUEBA";
+            ExpReg4:"CADENA PRUEBA 3";
+            //Comentario Prueba
+        }
+        */
     }
     
     public void metodoArbol() {
         try {
+            Parser.contadorHojas = 0;
             arbol = new Arbol();
             consola.append("Generando Método del arbol...\n");
             TablaSimbolos.getTablaSimbolos().forEach((s) -> {
                 if (s.arbolExpresiones != null){
-                    //s.preorder(s.arbolExpresiones);
+                    //s.preorderSiguientes(s.arbolExpresiones);
+                    //tablaSiguientes(s);
                     generarArbol(s);
                     s.contador = 0;
                 }
             });
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+    }
+    
+    public void tablaSiguientes(Simbolo s) {
+        try {
+//            TablaSiguientes tablaSig = new TablaSiguientes();
+//            tablaSig.getExp(s);
+//            tablaSig.llenarTabla();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -255,8 +261,15 @@ ExpReg4:"CADENA PRUEBA 3";
             String entrada;
             entrada="digraph G {\n" +
                     "  { \n" +
-                    "    node [margin=0 fontcolor=black fontsize=12 width=0.5 shape=circle rotate=45]\n" + 
-                    "r [label=\".\", xlabel=\"N\"]\n";
+                    "    node [margin=0 fontcolor=black fontsize=12 width=0.5 shape=circle rotate=45]\n";
+            String p = "";
+            String u = "";
+            if ("A".equals(s.arbolExpresiones.anulable)) {
+                p = s.arbolExpresiones.primeros;
+            }else{
+                p = s.arbolExpresiones.primeros;
+            }
+            entrada+= "r [label=\".\", xlabel=\"N "+ "\n P: " + p + "\"]\n";
             entrada+= s.obtenerNodos(s.arbolExpresiones);
             entrada+="a [label=\"#\", xlabel=\"N\"]\n" + 
                     "}\n" + 
@@ -297,6 +310,7 @@ ExpReg4:"CADENA PRUEBA 3";
             Runtime rt = Runtime.getRuntime();
 
             rt.exec(cmd);
+            System.out.println("Se generó correctamente.");
         }catch(Exception e){
             e.printStackTrace();
         }

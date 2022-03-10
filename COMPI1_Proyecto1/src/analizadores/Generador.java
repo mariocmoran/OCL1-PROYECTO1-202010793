@@ -48,6 +48,7 @@ public class Generador {
         for (int i = 0; i < ins.lista.size(); i++) {
                 System.out.print(ins.lista.get(i).getMessage());
         }
+        
         //PRUEBAS **********************************************************
     }
 }

@@ -177,7 +177,10 @@ public class Parser extends java_cup.runtime.lr_parser {
 
 
     /*Method that is called when parser can be recovered*/
-
+    public static int contadorHojas = 0;
+    String p = "";
+    String u = "";
+    ArrayList<Expresion> hojas = new ArrayList<>();
     public void syntax_error(Symbol s){ 
         System.out.println("Unexpected token: " +s.value); 
 	Instruccion.lista.addError(new Error_("Sintactical error: "+s.value, "Sintactico", s.right, s.left));
@@ -187,6 +190,7 @@ public class Parser extends java_cup.runtime.lr_parser {
 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
 	Instruccion.lista.addError(new Error_("Sintactical error: "+s.value, "Sintactico", s.right, s.left));
+        
     }
     
     
@@ -240,8 +244,8 @@ class CUP$Parser$actions {
 		int bleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).left;
 		int bright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
 		ArrayList<String> b = (ArrayList<String>)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
-		 
-    /**
+		
+    
     a.forEach((t) -> {
         System.out.println(t);
     });
@@ -250,7 +254,7 @@ class CUP$Parser$actions {
         System.out.println(t);
     });
     System.out.println("");
-    System.out.println(TablaSimbolos.EscribirArchivo());**/
+    System.out.println(TablaSimbolos.EscribirArchivo());
  
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("ini",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-5)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -414,10 +418,27 @@ class CUP$Parser$actions {
 		int e2right = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Expresion e2 = (Expresion)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-                    if (e1.anulable == "A" && e2.anulable == "A")
-                        RESULT = new Expresion(o, e1, e2, "A");
-                    else
-                        RESULT = new Expresion(o, e1, e2, "N");
+                    if (e1.anulable == "A" && e2.anulable == "A"){
+                        p = "";
+                        u = "";
+                        p = e1.primeros + "," + e2.primeros;
+                        u = e1.ultimos + "," + e2.ultimos; 
+                        RESULT = new Expresion(o, e1, e2, "A", p, u);
+                    }else{
+                        p = "";
+                        u = "";
+                        if (e1.anulable == "A"){
+                            p = e1.primeros + "," + e2.primeros;
+                        }else{
+                            p = e1.primeros;
+                        }
+                        if (e2.anulable == "A"){
+                            u = e1.ultimos + "," + e2.ultimos;
+                        }else{
+                            u = e2.ultimos;
+                        }
+                        RESULT = new Expresion(o, e1, e2, "N", p, u);
+                    }
                 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expresion",11, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -437,10 +458,17 @@ class CUP$Parser$actions {
 		int e2right = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Expresion e2 = (Expresion)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-                    if (e1.anulable == "A" || e2.anulable == "A")
-                        RESULT = new Expresion(o, e1, e2, "A");
-                    else
-                        RESULT = new Expresion(o, e1, e2, "N");
+                    p = "";
+                    u = "";
+                    if (e1.anulable == "A" || e2.anulable == "A"){
+                        p = e1.primeros + "," + e2.primeros;
+                        u = e1.ultimos + "," + e2.ultimos;
+                        RESULT = new Expresion(o, e1, e2, "A", p, u);
+                    }else{
+                        p = e1.primeros + "," + e2.primeros;
+                        u = e1.ultimos + "," + e2.ultimos;
+                        RESULT = new Expresion(o, e1, e2, "N", p, u);
+                    }
                 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expresion",11, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -456,7 +484,7 @@ class CUP$Parser$actions {
 		int e1left = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Expresion e1 = (Expresion)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		RESULT = new Expresion(o, e1, "A");
+		RESULT = new Expresion(o, e1, "A", e1.primeros, e1.ultimos);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expresion",11, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -472,10 +500,11 @@ class CUP$Parser$actions {
 		int e1right = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Expresion e1 = (Expresion)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-                    if (e1.anulable == "A")
-                        RESULT = new Expresion(o, e1, "A");
-                    else
-                        RESULT = new Expresion(o, e1, "N");
+                    if (e1.anulable == "A"){
+                        RESULT = new Expresion(o, e1, "A", e1.primeros, e1.ultimos);
+                    }else{
+                        RESULT = new Expresion(o, e1, "N", e1.primeros, e1.ultimos);
+                    }
                 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expresion",11, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -491,7 +520,9 @@ class CUP$Parser$actions {
 		int e1left = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Expresion e1 = (Expresion)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		RESULT = new Expresion(o, e1, "A");
+		
+                    RESULT = new Expresion(o, e1, "A", e1.primeros, e1.ultimos);
+                
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expresion",11, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -503,7 +534,12 @@ class CUP$Parser$actions {
 		int idleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).left;
 		int idright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
 		String id = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
-		RESULT = new Expresion(id, "N");
+		
+                    contadorHojas++;
+                    Expresion nuevo = new Expresion(id, "N", contadorHojas, contadorHojas+"", contadorHojas+"");
+                    hojas.add(nuevo);
+                    RESULT = nuevo;
+                
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expresion",11, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -515,7 +551,12 @@ class CUP$Parser$actions {
 		int cleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int cright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		String c = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		RESULT = new Expresion(c, "N");
+		
+                    contadorHojas++;
+                    Expresion nuevo = new Expresion(c, "N", contadorHojas, contadorHojas+"", contadorHojas+"");
+                    hojas.add(nuevo);
+                    RESULT = nuevo;
+                
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expresion",11, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -527,7 +568,12 @@ class CUP$Parser$actions {
 		int cleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int cright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		String c = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		RESULT = new Expresion(c, "N");
+		
+                    contadorHojas++;
+                    Expresion nuevo = new Expresion(c, "N", contadorHojas, contadorHojas+"", contadorHojas+"");
+                    hojas.add(nuevo);
+                    RESULT = nuevo;
+                
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expresion",11, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;

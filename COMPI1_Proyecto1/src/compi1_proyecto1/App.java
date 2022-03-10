@@ -22,7 +22,6 @@ implements ActionListener, MouseListener {
     JTextArea entrada, consola;
     
     String pathFile;
-    Arbol arbol;
     
     static int contadorArboles = 1;
     
@@ -224,7 +223,6 @@ implements ActionListener, MouseListener {
     public void metodoArbol() {
         try {
             Parser.contadorHojas = 0;
-            arbol = new Arbol();
             consola.append("Generando Método del arbol...\n");
             TablaSimbolos.getTablaSimbolos().forEach((s) -> {
                 if (s.arbolExpresiones != null){
@@ -246,17 +244,86 @@ implements ActionListener, MouseListener {
             tablaSig.listaHojas = s.hojas;
             tablaSig.llenarTabla();
             tablaSig.tablaToString();
-//            tablaSig.llenarTabla();
+            gererarTablaSiguientes(s, tablaSig);
         }catch(Exception e){
             e.printStackTrace();
         }
 
     }
     
+    public void gererarTablaSiguientes(Simbolo s, TablaSiguientes tablaSig){
+        int contador = 0;
+        try{
+            File fichero = new File ("C:\\Users\\oncec\\OneDrive\\Desktop\\" + s.getNombre() + "_tablasig.txt");
+            FileWriter wr = new FileWriter(fichero, false);
+            BufferedWriter w = new BufferedWriter(wr);
+
+            String entrada;
+            entrada="digraph {\n" +
+                    "  \n" +
+                    " tabla [shape=none, fontname=Helvetica,label=<\n" +
+                    "  <TABLE CELLSPACING=\"0\" CELLPADDING=\"3\" CELLBORDER =\"1\" BORDER=\"0\">\n" +
+                    "  <TR>\n" +
+                    "    <TD BGCOLOR=\"SKYBLUE\" FONT-FAMILY=\"\"> Valor </TD>\n" +
+                    "    <TD BGCOLOR=\"SKYBLUE\"> Hoja </TD>\n" +
+                    "    <TD BGCOLOR=\"SKYBLUE\"> Siguientes </TD>\n" +
+                    "  </TR>\n";
+            
+            for (int i = 0; i < tablaSig.listaSiguientes.size(); i++) {
+                entrada+="  <TR>\n" +
+                        "    <TD> "+ tablaSig.listaSiguientes.get(i).valor +" </TD>\n" +
+                        "    <TD> "+ tablaSig.listaSiguientes.get(i).hoja +" </TD>\n" +
+                        "    <TD> "+" </TD>\n" +
+                        "  </TR>\n";
+            }
+            
+            entrada+="  </TABLE>\n" +
+                    "  >]\n" +
+                    "  \n" +
+                    "}";
+            //Se escribe la informacion en el archivo
+            w.write(entrada);
+            w.flush();
+            w.close();
+            
+            generateGraphTablaSig(s);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
+    public void generateGraphTablaSig(Simbolo s){
+        try{
+            String dotPath = "C:\\Program Files\\Graphviz\\bin\\dot.exe";
+
+            String tParam = "-Tjpg";
+            String tOParam = "-o";
+
+            String fileInputPath = "C:\\Users\\oncec\\OneDrive\\Desktop\\" + s.getNombre() + "_tablasig.txt";
+            String fileOutputPath = "C:\\Users\\oncec\\OneDrive\\Desktop\\" + s.getNombre() +"_tablasig.jpg";
+            
+            contadorArboles++;
+
+            String[] cmd = new String[5];
+            cmd[0] = dotPath;
+            cmd[1] = tParam;
+            cmd[2] = fileInputPath;
+            cmd[3] = tOParam;
+            cmd[4] = fileOutputPath;
+
+            Runtime rt = Runtime.getRuntime();
+
+            rt.exec(cmd);
+            consola.append("La tabla de siguientes se generó correctamente.\n");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
     public void generarArbol(Simbolo s){
         int contador = 0;
         try{
-            File fichero = new File ("C:\\Users\\oncec\\OneDrive\\Desktop\\" + s.getNombre() + "_" + contadorArboles +".txt");
+            File fichero = new File ("C:\\Users\\oncec\\OneDrive\\Desktop\\" + s.getNombre() + ".txt");
             FileWriter wr = new FileWriter(fichero, false);
             BufferedWriter w = new BufferedWriter(wr);
 
@@ -293,8 +360,8 @@ implements ActionListener, MouseListener {
             String tParam = "-Tjpg";
             String tOParam = "-o";
 
-            String fileInputPath = "C:\\Users\\oncec\\OneDrive\\Desktop\\" + s.getNombre() + "_" + contadorArboles +".txt";
-            String fileOutputPath = "C:\\Users\\oncec\\OneDrive\\Desktop\\" + s.getNombre() +"_image_"+ contadorArboles +".jpg";
+            String fileInputPath = "C:\\Users\\oncec\\OneDrive\\Desktop\\" + s.getNombre() + ".txt";
+            String fileOutputPath = "C:\\Users\\oncec\\OneDrive\\Desktop\\" + s.getNombre() +"_image.jpg";
             
             contadorArboles++;
 

@@ -10,6 +10,7 @@ public class TablaSiguientes {
     
     public void llenarTabla(){
         for (int i = 0; i < listaHojas.size(); i++) {
+            System.out.println(listaHojas.get(i).simbolo + " " + listaHojas.get(i).numeroHoja+"");
             ElementoSiguiente novo = new ElementoSiguiente(listaHojas.get(i).simbolo, listaHojas.get(i).numeroHoja+"");
             listaSiguientes.add(novo);
         }
